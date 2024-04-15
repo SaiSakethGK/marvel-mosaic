@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <img src="{{ character.thumbnail.path }}.{{ character.thumbnail.extension }}" alt="{{ character.name }}" class="card-img-top">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">{{ character.name }}</h1>
+                    <p class="card-text">{{ character.description }}</p>
+                    <h5 class="card-subtitle mb-2 text-muted">Comics:</h5>
+                    <ul class="list-group list-group-flush">
+                    {% for comic in character.comics.items %}
+                        <li class="list-group-item">{{ comic.name }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

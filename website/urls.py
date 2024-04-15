@@ -1,12 +1,11 @@
 from django.urls import path
 from . import views
-
-# Check if 'views.py' contains a 'home' function
-# If it does, import it and use it as the second argument in the 'path' function
-# If it doesn't, create the 'home' function in 'views.py'
-
+from .views import character_detail
+# Import the missing attribute if necessary
 urlpatterns = [
     path('', views.home, name='home'),
     # path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
+    path('characters_list/', views.characters_list, name='characters_list'),
+    path('character/<int:character_id>/', views.character_detail, name='character_detail'),
 ]

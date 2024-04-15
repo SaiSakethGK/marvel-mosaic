@@ -12,7 +12,7 @@ def generate_hash(time_stamp):
     return hashlib.md5(hash_input.encode()).hexdigest()
 
 
-def get_marvel_characters(max_characters=100):
+def get_marvel_characters(max_characters=1000):
     characters = []
     time_stamp = str(time.time())
     hash_value = generate_hash(time_stamp)
@@ -30,8 +30,11 @@ def get_marvel_characters(max_characters=100):
         response = requests.get('http://gateway.marvel.com/v1/public/characters', params=params, timeout=10)
         data = response.json()
 
-        characters.extend(data['data']['results'])
-        offset += LIMIT
+        if 'data' in data and 'results' in data['data']:
+            characters.extend(data['data']['results'])
+            offset += LIMIT
+        else:
+            break
 
     return characters[:max_characters]
 

@@ -34,3 +34,17 @@ def get_marvel_characters(max_characters=100):
         offset += LIMIT
 
     return characters[:max_characters]
+
+def get_character_by_id(character_id):
+    ts = str(time.time())
+    hash_value = hashlib.md5((ts + PRIVATE_KEY + PUBLIC_KEY).encode('utf-8')).hexdigest()
+
+    url = f"http://gateway.marvel.com/v1/public/characters/{character_id}"
+    params = {
+        'apikey': PUBLIC_KEY,
+        'ts': ts,
+        'hash': hash_value
+    }
+
+    response = requests.get(url, params=params)
+    return response.json()['data']['results'][0]

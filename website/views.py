@@ -31,6 +31,6 @@ def characters_list(request):
     characters = get_marvel_characters()
     return render(request, 'characters_list.html', {'characters': characters})
 
-def character_detail(request, character_id):  # Add character_id parameter
+def character_detail(request, character_id):
     character = get_character_by_id(character_id)
     return render(request, 'character_detail.html', {'character': character})

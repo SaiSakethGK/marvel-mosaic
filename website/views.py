@@ -6,6 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from marvel_api import get_marvel_characters, get_character_by_id
 
 
+
+
 def home(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -19,17 +21,25 @@ def home(request):
             messages.success(request, 'Invalid username or password, Please try again...')
             return redirect('home')
 
+
     else:
         return render(request, 'home.html', {})
+
 
 def logout_user(request):
     logout(request)
     messages.success(request, 'You have been logged out...')
     return redirect('home')
 
+
 def characters_list(request):
-    characters = get_marvel_characters()
+    search_query = request.GET.get('search', '')
+    if search_query:
+        characters = [character for character in get_marvel_characters() if search_query.lower() in character['name'].lower()]
+    else:
+        characters = get_marvel_characters()
     return render(request, 'characters_list.html', {'characters': characters})
+
 
 def character_detail(request, character_id):
     character = get_character_by_id(character_id)

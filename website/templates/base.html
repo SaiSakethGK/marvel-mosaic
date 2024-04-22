@@ -72,9 +72,23 @@
           text-align: right;
           margin-top: auto; /* pushes the username to the bottom */
       }
+      .body-background {
+          background: url('path-to-your-background-image.jpg') no-repeat center center fixed;
+          -webkit-background-size: cover;
+          -moz-background-size: cover;
+          -o-background-size: cover;
+          background-size: cover;
+      }
+
+      .character-image {
+          width: 83%;  /* Make the images fill the width of the card */
+          height: auto;
+          border-top-left-radius: calc(.25rem - 1px);
+          border-bottom-left-radius: calc(.25rem - 1px);
+      }
   </style>
   </head>
-  <body>
+  <body class="body-background">
 
 
     {% include 'navbar.html' %}

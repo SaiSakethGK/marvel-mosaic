@@ -23,6 +23,10 @@
             </div>
         </div>
     </div>
+    <form method="post" action="{% url 'add_to_favorites' character.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Add to Favorites</button>
+    </form>
 </div>
 <div class="mt-5">
     <h2>Discussion</h2>

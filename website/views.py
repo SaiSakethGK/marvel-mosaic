@@ -9,7 +9,35 @@ from django.contrib.auth.decorators import login_required
 from .models import Post
 from django.contrib.auth.decorators import login_required
 from .models import Post, Reply
+from .models import FavoriteCharacter
 
+
+
+@login_required
+def add_to_favorites(request, character_id):
+    user = request.user
+    # Check if the character is already in favorites
+    if not FavoriteCharacter.objects.filter(user=user, character_id=character_id).exists():
+        FavoriteCharacter.objects.create(user=user, character_id=character_id)
+        messages.success(request, "Character added to favorites!")
+    else:
+        messages.info(request, "Character already in favorites!")
+    return redirect('character_detail', character_id=character_id)
+
+@login_required
+def view_favorites(request):
+    user = request.user
+    favorite_characters = FavoriteCharacter.objects.filter(user=user)
+    characters_data = []
+    for favorite_character in favorite_characters:
+        character_id = favorite_character.character_id
+        character = get_character_by_id(character_id)  # Fetch character details from your database
+        characters_data.append({
+            'id': character_id,
+            'name': character['name'],
+            'image_url': f"{character['thumbnail']['path']}.{character['thumbnail']['extension']}"
+        })
+    return render(request, 'favorites.html', {'characters_data': characters_data})
 
 
 def home(request):

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">My Favorite Characters!</h1>
+    <br>
+    <div class="row">
+        {% for character_data in characters_data %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="row no-gutters">
+                  <div class="col-md-4 d-flex align-items-center justify-content-center">
+                      <img src="{{ character_data.image_url }}" alt="{{ character_data.name }}" class="character-image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ character_data.name }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Rank: {{ forloop.counter }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

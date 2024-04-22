@@ -24,4 +24,48 @@
         </div>
     </div>
 </div>
+<div class="mt-5">
+    <h2>Discussion</h2>
+    <form method="post" action="{% url 'create_post' character.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea name="content" class="form-control" placeholder="Write a post..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Post</button>
+        <br>
+        <br>
+    </form>
+
+
+    {% for post in posts %}
+        <div class="post">
+            <p>{{ post.content }}</p>
+            <div class="username">
+                <h3> ~ {{ post.user.username }}</h3>
+            </div>
+            {% for reply in post.replies.all %}
+                <div class="reply">
+                    <p class="reply-content">{{ reply.content }}</p>
+                    <div class="reply-username">
+                        <h4> ~ {{ reply.user.username }}</h4>
+                    </div>
+                </div>
+            {% endfor %}
+            <button class="reply-button" type="button" data-toggle="collapse" data-target="#replyForm{{post.id}}" aria-expanded="false" aria-controls="replyForm{{post.id}}">
+                Reply
+            </button>
+            <div class="collapse mt-2" id="replyForm{{post.id}}">
+                <form method="post" action="{% url 'create_reply' post.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <textarea name="content" class="form-control" placeholder="Write a reply..." required></textarea>
+                    </div>
+                    <div class="submit-button-container">
+                        <button type="submit" class="btn btn-secondary">Submit Reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 {% endblock %}

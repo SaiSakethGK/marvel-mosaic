@@ -5,6 +5,10 @@ from marvel_api import get_marvel_characters, get_character_by_id
 from django.shortcuts import render, get_object_or_404
 from marvel_api import get_marvel_characters, get_character_by_id
 from .forms import SignUpForm
+from django.contrib.auth.decorators import login_required
+from .models import Post
+from django.contrib.auth.decorators import login_required
+from .models import Post, Reply
 
 
 
@@ -43,7 +47,8 @@ def characters_list(request):
 
 def character_detail(request, character_id):
     character = get_character_by_id(character_id)
-    return render(request, 'character_detail.html', {'character': character})
+    posts = Post.objects.filter(character_id=character_id).order_by('-created_at')
+    return render(request, 'character_detail.html', {'character': character, 'posts': posts})
 
 def register_user(request):
     if request.method == 'POST':
@@ -62,3 +67,19 @@ def register_user(request):
         return render(request, 'register.html', {'form': form})
 
     return render(request, 'register.html', {'form': form})
+
+@login_required
+def create_post(request, character_id):
+    if request.method == 'POST':
+        content = request.POST['content']
+        Post.objects.create(user=request.user, character_id=character_id, content=content)
+        return redirect('character_detail', character_id=character_id)
+
+
+@login_required
+def create_reply(request, post_id):
+    if request.method == 'POST':
+        content = request.POST['content']
+        post = Post.objects.get(id=post_id)
+        Reply.objects.create(user=request.user, post=post, content=content)
+        return redirect('character_detail', character_id=post.character_id)

@@ -11,6 +11,6 @@ urlpatterns = [
     path('register/', views.register_user, name='register'),
     path('character/<int:character_id>/post', views.create_post, name='create_post'),
     path('post/<int:post_id>/reply', views.create_reply, name='create_reply'),
-    path('character/<int:character_id>/post', views.create_post, name='create_post'),
-    path('post/<int:post_id>/reply', views.create_reply, name='create_reply'),
+    path('character/<int:character_id>/add_to_favorites/', views.add_to_favorites, name='add_to_favorites'),
+    path('view_favorites/', views.view_favorites, name='view_favorites'),
 ]

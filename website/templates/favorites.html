@@ -1,16 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% if no_characters_found %}
+    <h2 class="text-center">No characters found in your favorites list !!</h2>
+    <br>
+{% else %}
 <div class="container mt-5">
     <h1 class="text-center">My Favorite Characters!</h1>
     <br>
     <div class="row">
         {% for character_data in characters_data %}
         <div class="col-md-4 mb-4">
-            <div class="card">
+            <div class="card position-relative">
+                <form method="post" action="{% url 'remove_from_favorites' character_data.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-close position-absolute top-0 end-0" aria-label="Close" style="z-index: 1;"></button>
+                </form>
                 <div class="row no-gutters">
-                  <div class="col-md-4 d-flex align-items-center justify-content-center">
-                      <img src="{{ character_data.image_url }}" alt="{{ character_data.name }}" class="character-image">
+                    <div class="col-md-4 d-flex align-items-center justify-content-center">
+                        <img src="{{ character_data.image_url }}" alt="{{ character_data.name }}" class="character-image">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -26,4 +35,6 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}
+
 {% endblock %}

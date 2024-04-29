@@ -11,7 +11,26 @@ from django.contrib.auth.decorators import login_required
 from .models import Post, Reply
 from .models import FavoriteCharacter
 from django.http import JsonResponse
+from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
+
+@method_decorator(login_required, name='dispatch')
+class RemoveFromFavoritesView(View):
+    def post(self, request, character_id):
+        user = request.user
+        # Check if the character is in favorites
+        favorite_character = FavoriteCharacter.objects.filter(user=user, character_id=character_id).first()
+        if favorite_character:
+            character = get_character_by_id(character_id)
+            character_name = character['name']
+            favorite_character.delete()
+            messages.success(request, f"{character_name} removed from favorites!")
+        else:
+            messages.info(request, "Character not in favorites!")
+        return redirect('view_favorites')
+    
 
 def characters_list_ajax(request):
     search_query = request.GET.get('search', '')
@@ -39,13 +58,16 @@ def view_favorites(request):
     characters_data = []
     for favorite_character in favorite_characters:
         character_id = favorite_character.character_id
-        character = get_character_by_id(character_id)  # Fetch character details from your database
+        character = get_character_by_id(character_id)
         characters_data.append({
             'id': character_id,
             'name': character['name'],
             'image_url': f"{character['thumbnail']['path']}.{character['thumbnail']['extension']}"
         })
-    return render(request, 'favorites.html', {'characters_data': characters_data})
+
+    no_characters_found = len(characters_data) == 0
+
+    return render(request, 'favorites.html', {'characters_data': characters_data, 'no_characters_found': no_characters_found})
 
 
 def home(request):
@@ -119,3 +141,4 @@ def create_reply(request, post_id):
         post = Post.objects.get(id=post_id)
         Reply.objects.create(user=request.user, post=post, content=content)
         return redirect('character_detail', character_id=post.character_id)
+    

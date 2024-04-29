@@ -10,8 +10,16 @@ from .models import Post
 from django.contrib.auth.decorators import login_required
 from .models import Post, Reply
 from .models import FavoriteCharacter
+from django.http import JsonResponse
 
 
+def characters_list_ajax(request):
+    search_query = request.GET.get('search', '')
+    if search_query:
+        characters = [character for character in get_marvel_characters() if search_query.lower() in character['name'].lower()]
+    else:
+        characters = get_marvel_characters()
+    return render(request, 'characters_list.html', {'characters': characters})
 
 @login_required
 def add_to_favorites(request, character_id):

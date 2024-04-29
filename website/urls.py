@@ -1,10 +1,9 @@
 from django.urls import path
 from . import views
-from .views import character_detail
-# Import the missing attribute if necessary
+from .views import character_detail, RemoveFromFavoritesView
+
 urlpatterns = [
     path('', views.home, name='home'),
-    # path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('characters_list/', views.characters_list, name='characters_list'),
     path('character/<int:character_id>/', views.character_detail, name='character_detail'),
@@ -14,4 +13,5 @@ urlpatterns = [
     path('character/<int:character_id>/add_to_favorites/', views.add_to_favorites, name='add_to_favorites'),
     path('view_favorites/', views.view_favorites, name='view_favorites'),
     path('characters_list_ajax/', views.characters_list_ajax, name='characters_list_ajax'),
+    path('character/<int:character_id>/remove_from_favorites/', RemoveFromFavoritesView.as_view(), name='remove_from_favorites'),
 ]

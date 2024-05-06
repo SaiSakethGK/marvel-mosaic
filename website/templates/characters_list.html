@@ -21,7 +21,7 @@
             {% if character.description and character.thumbnail.path and character.thumbnail.extension %}
                 <div class="col-md-6 mb-4">
                     <a href="/character/{{ character.id }}" style="text-decoration: none; color: inherit;">
-                        <div class="card p-3 bg-light" style="height: 250px; overflow-y: hidden;">
+                        <div class="card bg-light border shadow p-3" style="height: 250px; overflow-y: hidden;">
                             <div class="d-flex">
                                 <img src="{{ character.thumbnail.path }}.{{ character.thumbnail.extension }}" alt="{{ character.name }}" style="width: 218px; height: 218px; border-radius: 3%;">
                                 <div class="ml-2">

@@ -16,6 +16,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
+def confirm_remove_from_favorites(request, character_id):
+    character = get_character_by_id(character_id)
+    if request.method == 'POST':
+        return render(request, 'confirm_remove.html', {'character': character})
+
 @method_decorator(login_required, name='dispatch')
 class RemoveFromFavoritesView(View):
     def post(self, request, character_id):

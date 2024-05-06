@@ -13,7 +13,7 @@
         {% for character_data in characters_data %}
         <div class="col-md-4 mb-4">
             <div class="card position-relative">
-                <form method="post" action="{% url 'remove_from_favorites' character_data.id %}">
+                <form method="post" action="{% url 'confirm_remove_from_favorites' character_data.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn-close position-absolute top-0 end-0" aria-label="Close" style="z-index: 1;"></button>
                 </form>

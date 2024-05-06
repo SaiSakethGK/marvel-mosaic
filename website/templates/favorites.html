@@ -12,23 +12,32 @@
     <div class="row">
         {% for character_data in characters_data %}
         <div class="col-md-4 mb-4">
-            <div class="card position-relative">
+            <div class="card position-relative border shadow bg-light p-3">
                 <form method="post" action="{% url 'confirm_remove_from_favorites' character_data.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn-close position-absolute top-0 end-0" aria-label="Close" style="z-index: 1;"></button>
                 </form>
                 <div class="row no-gutters">
                     <div class="col-md-4 d-flex align-items-center justify-content-center">
-                        <img src="{{ character_data.image_url }}" alt="{{ character_data.name }}" class="character-image">
+                        <img src="{{ character_data.image_url }}" alt="{{ character_data.name }}" class="character-image img-fluid">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">{{ character_data.name }}</h5>
+                            <h5 class="card-title font-weight-bold py-2">{{ character_data.name }}</h5>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">Rank: {{ forloop.counter }}</small>
+                    <!-- Update rank form -->
+                    <form method="post" action="{% url 'update_rank' character_data.id %}" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        <select name="rank" class="form-control form-control-sm mr-2">
+                            {% for i in range %}
+                                <option value="{{ i }}" {% if i == character_data.rank %}selected{% endif %}>Rank: {{ i }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-secondary btn-sm">Update</button>
+                    </form>
                 </div>
             </div>
         </div>

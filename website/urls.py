@@ -14,4 +14,5 @@ urlpatterns = [
     path('view_favorites/', views.view_favorites, name='view_favorites'),
     path('characters_list_ajax/', views.characters_list_ajax, name='characters_list_ajax'),
     path('character/<int:character_id>/remove_from_favorites/', RemoveFromFavoritesView.as_view(), name='remove_from_favorites'),
+    path('character/<int:character_id>/confirm_remove_from_favorites/', views.confirm_remove_from_favorites, name='confirm_remove_from_favorites'),
 ]

@@ -14,6 +14,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.template.loader import render_to_string
 
 
 
@@ -113,7 +114,13 @@ def characters_list(request):
         characters = [character for character in get_marvel_characters() if search_query.lower() in character['name'].lower()]
     else:
         characters = get_marvel_characters()
-    return render(request, 'characters_list.html', {'characters': characters})
+    
+    # Render the character list HTML
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        characters_html = render_to_string('characters_list_partial.html', {'characters': characters})
+        return JsonResponse({'characters_html': characters_html})
+    else:
+        return render(request, 'characters_list.html', {'characters': characters})
 
 
 def character_detail(request, character_id):

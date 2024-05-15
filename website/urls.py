@@ -12,7 +12,7 @@ urlpatterns = [
     path('post/<int:post_id>/reply', views.create_reply, name='create_reply'),
     path('character/<int:character_id>/add_to_favorites/', views.add_to_favorites, name='add_to_favorites'),
     path('view_favorites/', views.view_favorites, name='view_favorites'),
-    path('characters_list_ajax/', views.characters_list_ajax, name='characters_list_ajax'),
+    path('character/<int:character_id>/update_rank/', views.update_rank, name='update_rank'),
     path('character/<int:character_id>/remove_from_favorites/', RemoveFromFavoritesView.as_view(), name='remove_from_favorites'),
     path('character/<int:character_id>/confirm_remove_from_favorites/', views.confirm_remove_from_favorites, name='confirm_remove_from_favorites'),
 ]

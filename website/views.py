@@ -14,6 +14,21 @@ from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.template.loader import render_to_string
+
+
+
+@login_required
+def update_rank(request, character_id):
+    favorite_character = get_object_or_404(FavoriteCharacter, user=request.user, character_id=character_id)
+    if request.method == 'POST':
+        new_rank = request.POST.get('rank')
+        favorite_character.rank = new_rank
+        favorite_character.save()
+        return redirect('view_favorites')
+    else:
+        # Handle the case where the method is not POST
+        pass
 
 
 def confirm_remove_from_favorites(request, character_id):
@@ -37,14 +52,6 @@ class RemoveFromFavoritesView(View):
         return redirect('view_favorites')
     
 
-def characters_list_ajax(request):
-    search_query = request.GET.get('search', '')
-    if search_query:
-        characters = [character for character in get_marvel_characters() if search_query.lower() in character['name'].lower()]
-    else:
-        characters = get_marvel_characters()
-    return render(request, 'characters_list.html', {'characters': characters})
-
 @login_required
 def add_to_favorites(request, character_id):
     user = request.user
@@ -59,7 +66,7 @@ def add_to_favorites(request, character_id):
 @login_required
 def view_favorites(request):
     user = request.user
-    favorite_characters = FavoriteCharacter.objects.filter(user=user)
+    favorite_characters = FavoriteCharacter.objects.filter(user=user).order_by('rank')
     characters_data = []
     for favorite_character in favorite_characters:
         character_id = favorite_character.character_id
@@ -67,12 +74,14 @@ def view_favorites(request):
         characters_data.append({
             'id': character_id,
             'name': character['name'],
-            'image_url': f"{character['thumbnail']['path']}.{character['thumbnail']['extension']}"
+            'image_url': f"{character['thumbnail']['path']}.{character['thumbnail']['extension']}",
+            'rank': favorite_character.rank
         })
 
     no_characters_found = len(characters_data) == 0
+    rank_range = list(range(1, len(favorite_characters) + 1))
 
-    return render(request, 'favorites.html', {'characters_data': characters_data, 'no_characters_found': no_characters_found})
+    return render(request, 'favorites.html', {'characters_data': characters_data, 'no_characters_found': no_characters_found, 'range': rank_range})
 
 
 def home(request):
@@ -105,7 +114,13 @@ def characters_list(request):
         characters = [character for character in get_marvel_characters() if search_query.lower() in character['name'].lower()]
     else:
         characters = get_marvel_characters()
-    return render(request, 'characters_list.html', {'characters': characters})
+    
+    # Render the character list HTML
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        characters_html = render_to_string('characters_list_partial.html', {'characters': characters})
+        return JsonResponse({'characters_html': characters_html})
+    else:
+        return render(request, 'characters_list.html', {'characters': characters})
 
 
 def character_detail(request, character_id):
@@ -146,4 +161,3 @@ def create_reply(request, post_id):
         post = Post.objects.get(id=post_id)
         Reply.objects.create(user=request.user, post=post, content=content)
         return redirect('character_detail', character_id=post.character_id)
-    

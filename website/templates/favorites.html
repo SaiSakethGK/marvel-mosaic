@@ -50,7 +50,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                Are you sure you want to remove <b>{{ character_data.name }}</b> from your favorites?
+                                Are you sure you want to remove {{ character_data.name }} from your favorites?
                             </div>
                             <div class="modal-footer">
                                 <form method="post" action="{% url 'remove_from_favorites' character_data.id %}">

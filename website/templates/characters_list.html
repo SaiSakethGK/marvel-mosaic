@@ -1,72 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <style>
-    .card:hover {
-        transform: scale(1.02);
-        transition: transform .1s;
-    }
-    </style>
-    <div class="container mt-5">
-        <h1 class="d-flex justify-content-between align-items-center">
-            Marvel Characters
-            <form class="form-inline" id="search-form">
-                <input class="form-control" type="text" id="search-input" name="search" placeholder="Search characters" value="{{ request.GET.search }}">
-                <input class="btn btn-primary ml-2" type="submit" value="Search">
-            </form>
-        </h1>
-    <div class="row" id="characters-container">
-        <!-- Dynamic content will be loaded here -->
-        {% for character in characters %}
-            {% if character.description and character.thumbnail.path and character.thumbnail.extension %}
-                <div class="col-md-6 mb-4">
-                    <a href="/character/{{ character.id }}" style="text-decoration: none; color: inherit;">
-                        <div class="card p-3 bg-light" style="height: 250px; overflow-y: hidden;">
-                            <div class="d-flex">
-                                <img src="{{ character.thumbnail.path }}.{{ character.thumbnail.extension }}" alt="{{ character.name }}" style="width: 218px; height: 218px; border-radius: 3%;">
-                                <div class="ml-2">
-                                    <h6 style="margin-bottom: 10px; margin-left: 10px;">{{ character.name }}</h6>
-                                    <p style="margin-left: 10px;">{{ character.description }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            {% endif %}
-        {% endfor %}
+<style>
+.card:hover {
+    transform: scale(1.02);
+    transition: transform .1s;
+}
+</style>
+<div class="container mt-5">
+    <h1 class="d-flex justify-content-between align-items-center">
+        Marvel Characters
+        <form id="searchForm" class="form-inline">
+            <input id="searchInput" class="form-control" type="text" name="search" placeholder="Search characters" value="{{ request.GET.search }}">
+            <input class="btn btn-primary ml-2" type="submit" value="Search">
+        </form>
+    </h1>
+    <div id="charactersList">
+        {% include 'characters_list_partial.html' %}
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function(){
-    // Function to load characters based on search query
-    function loadCharacters(searchQuery="") {
+$(document).ready(function() {
+    $('#searchForm').submit(function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        var searchQuery = $('#searchInput').val();
         $.ajax({
             type: 'GET',
-            url: '{% url "characters_list_ajax" %}',
+            url: '{% url "characters_list" %}',
             data: {
                 'search': searchQuery
             },
             success: function(data) {
-                $('#characters-container').html(data);
+                $('#charactersList').html(data.characters_html); // Replace the current characters list with the new one
             },
             error: function(xhr, errmsg, err) {
-                console.log(xhr.status + ": " + xhr.responseText);
+                console.log(xhr.status + ': ' + xhr.responseText); // Log any errors to the console
             }
         });
-    }
-
-    // Load characters on page load
-    loadCharacters();
-
-    // Submit search form
-    $('#search-form').submit(function(e) {
-        e.preventDefault();
-        var searchQuery = $('#search-input').val();
-        loadCharacters(searchQuery);
     });
 });
 </script>

@@ -13,7 +13,6 @@
         {% for character_data in characters_data %}
         <div class="col-md-4 mb-4">
             <div class="card position-relative border shadow bg-light p-3">
-                <!-- Button to open the modal -->
                 <button type="button" class="btn-close position-absolute top-0 end-0" aria-label="Close" style="z-index: 1;" data-toggle="modal" data-target="#removeModal{{ character_data.id }}"></button>
 
                 <div class="row no-gutters">
@@ -27,7 +26,6 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <!-- Update rank form -->
                     <form method="post" action="{% url 'update_rank' character_data.id %}" class="d-flex align-items-center">
                         {% csrf_token %}
                         <select name="rank" class="form-control form-control-sm mr-2">
@@ -39,7 +37,6 @@
                     </form>
                 </div>
 
-                <!-- Modal -->
                 <div class="modal fade" id="removeModal{{ character_data.id }}" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel{{ character_data.id }}" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">

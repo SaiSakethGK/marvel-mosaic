@@ -23,7 +23,7 @@
 <script>
 $(document).ready(function() {
     $('#searchForm').submit(function(event) {
-        event.preventDefault(); // Prevent the form from submitting normally
+        event.preventDefault();
 
         var searchQuery = $('#searchInput').val();
         $.ajax({
@@ -33,10 +33,10 @@ $(document).ready(function() {
                 'search': searchQuery
             },
             success: function(data) {
-                $('#charactersList').html(data.characters_html); // Replace the current characters list with the new one
+                $('#charactersList').html(data.characters_html);
             },
             error: function(xhr, errmsg, err) {
-                console.log(xhr.status + ': ' + xhr.responseText); // Log any errors to the console
+                console.log(xhr.status + ': ' + xhr.responseText);
             }
         });
     });

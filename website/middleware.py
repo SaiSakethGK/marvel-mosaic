@@ -1,5 +1,3 @@
-# middleware.py
-
 import logging
 
 class MyMiddleware:
@@ -8,7 +6,6 @@ class MyMiddleware:
         self.logger = logging.getLogger(__name__)
 
     def __call__(self, request):
-        # Log the request method and path
         self.logger.info(f"Request: {request.method} {request.path}")
 
         response = self.get_response(request)

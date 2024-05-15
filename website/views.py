@@ -27,7 +27,6 @@ def update_rank(request, character_id):
         favorite_character.save()
         return redirect('view_favorites')
     else:
-        # Handle the case where the method is not POST
         pass
 
 
@@ -40,7 +39,6 @@ def confirm_remove_from_favorites(request, character_id):
 class RemoveFromFavoritesView(View):
     def post(self, request, character_id):
         user = request.user
-        # Check if the character is in favorites
         favorite_character = FavoriteCharacter.objects.filter(user=user, character_id=character_id).first()
         if favorite_character:
             character = get_character_by_id(character_id)
@@ -55,7 +53,6 @@ class RemoveFromFavoritesView(View):
 @login_required
 def add_to_favorites(request, character_id):
     user = request.user
-    # Check if the character is already in favorites
     if not FavoriteCharacter.objects.filter(user=user, character_id=character_id).exists():
         FavoriteCharacter.objects.create(user=user, character_id=character_id)
         messages.success(request, "Character added to favorites!")
@@ -115,7 +112,6 @@ def characters_list(request):
     else:
         characters = get_marvel_characters()
     
-    # Render the character list HTML
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         characters_html = render_to_string('characters_list_partial.html', {'characters': characters})
         return JsonResponse({'characters_html': characters_html})
@@ -133,7 +129,6 @@ def register_user(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            # Authenticate and login
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)

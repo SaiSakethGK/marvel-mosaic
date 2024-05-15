@@ -1,7 +1,7 @@
 <div id="charactersList" class="row">
     {% for character in characters %}
         {% if character.description and character.thumbnail.path and character.thumbnail.extension %}
-            <div class="col-md-6 mb-4"> <!-- Adjust the 'col-md-6' class to control the number of cards per row -->
+            <div class="col-md-6 mb-4">
                 <a href="/character/{{ character.id }}" style="text-decoration: none; color: inherit;">
                     <div class="card bg-light border shadow p-3" style="height: 250px; overflow-y: hidden;">
                         <div class="d-flex">

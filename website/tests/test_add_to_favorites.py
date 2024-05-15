@@ -10,13 +10,10 @@ class AddToFavoritesTestCase(TestCase):
         self.client.login(username='testuser', password='12345')
 
     def test_add_to_favorites(self):
-        # Ensure character is not initially in favorites
-        character_id = 123  # Replace with the character ID you want to test
+        character_id = 123
         self.assertFalse(FavoriteCharacter.objects.filter(user=self.user, character_id=character_id).exists())
 
-        # Make request to add character to favorites
         response = self.client.post(reverse('add_to_favorites', args=[character_id]))
 
-        # Check if character is added to favorites
-        self.assertEqual(response.status_code, 302)  # Redirect status code
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(FavoriteCharacter.objects.filter(user=self.user, character_id=character_id).exists())

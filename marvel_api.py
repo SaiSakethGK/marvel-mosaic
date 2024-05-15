@@ -50,4 +50,9 @@ def get_character_by_id(character_id):
     }
 
     response = requests.get(url, params=params)
-    return response.json()['data']['results'][0]
+    data = response.json().get('data', {})
+    results = data.get('results', [])
+    if results:
+        return results[0]
+    else:
+        return None

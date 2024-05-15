@@ -12,7 +12,7 @@ def generate_hash(time_stamp):
     return hashlib.md5(hash_input.encode()).hexdigest()
 
 
-def get_marvel_characters(max_characters=1000):
+def get_marvel_characters(max_characters=80):
     characters = []
     time_stamp = str(time.time())
     hash_value = generate_hash(time_stamp)

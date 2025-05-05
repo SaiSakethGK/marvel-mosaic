@@ -14,14 +14,20 @@ from pathlib import Path
 
 import os
 
-STATIC_URL = '/static/'
+
+
+
+# (Optional) In case you're also using HTTPS:
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/static/'
+
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 
@@ -32,10 +38,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 SECRET_KEY = 'django-insecure-*atu%ndhsue2a19z7ax(c779&ma=xmg1+*#$2!4)c^=c=kegnt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', '') != 'False'
+
+CSRF_TRUSTED_ORIGINS = ['https://ecd8-2601-18c-8286-96f0-c467-51e7-fe0d-2357.ngrok-free.app']
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 

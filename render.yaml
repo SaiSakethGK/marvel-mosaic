@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: marvel-django
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn marvel.wsgi:application"
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False

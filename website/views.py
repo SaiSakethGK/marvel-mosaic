@@ -15,8 +15,15 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.template.loader import render_to_string
+import requests
+from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 
+def subscribed_emails(request):
+    if request.method == 'GET':
+        emails = list(User.objects.filter(profile__subscribe_news=True).values_list('email', flat=True))
+        return JsonResponse({'emails': emails})
 
 @login_required
 def update_rank(request, character_id):
@@ -68,6 +75,8 @@ def view_favorites(request):
     for favorite_character in favorite_characters:
         character_id = favorite_character.character_id
         character = get_character_by_id(character_id)
+        if character is None:
+            continue 
         characters_data.append({
             'id': character_id,
             'name': character['name'],
@@ -124,6 +133,7 @@ def character_detail(request, character_id):
     posts = Post.objects.filter(character_id=character_id).order_by('-created_at')
     return render(request, 'character_detail.html', {'character': character, 'posts': posts})
 
+
 def register_user(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -133,13 +143,30 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, "You Have Successfully Registered! Welcome!")
+
+            # ✅ Save checkbox value to user profile
+            if form.cleaned_data.get('subscribe_news'):
+                user.profile.subscribe_news = True
+                user.profile.save()
+
+                # ✅ Send to Zapier if subscribed
+                try:
+                    requests.post('https://hooks.zapier.com/hooks/catch/21605979/2nyzikk/', json={
+                        'email': user.email,
+                        'name': f"{user.first_name} {user.last_name}"
+                    })
+                except Exception as e:
+                    print("Zapier webhook failed:", e)
+
+            messages.success(request, "You Have Successfully Registered!")
             return redirect('home')
     else:
         form = SignUpForm()
-        return render(request, 'register.html', {'form': form})
 
     return render(request, 'register.html', {'form': form})
+
+
+
 
 @login_required
 def create_post(request, character_id):

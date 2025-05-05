@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from .views import character_detail, RemoveFromFavoritesView
+from .views import subscribed_emails
+
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -15,4 +17,5 @@ urlpatterns = [
     path('character/<int:character_id>/update_rank/', views.update_rank, name='update_rank'),
     path('character/<int:character_id>/remove_from_favorites/', RemoveFromFavoritesView.as_view(), name='remove_from_favorites'),
     path('character/<int:character_id>/confirm_remove_from_favorites/', views.confirm_remove_from_favorites, name='confirm_remove_from_favorites'),
+    path('api/subscribed-emails/', subscribed_emails, name='subscribed_emails'),
 ]

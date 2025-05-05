@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from .views import character_detail, RemoveFromFavoritesView
 from .views import subscribed_emails
+from .views import get_subscribed_users
+
 
 
 urlpatterns = [
@@ -18,4 +20,5 @@ urlpatterns = [
     path('character/<int:character_id>/remove_from_favorites/', RemoveFromFavoritesView.as_view(), name='remove_from_favorites'),
     path('character/<int:character_id>/confirm_remove_from_favorites/', views.confirm_remove_from_favorites, name='confirm_remove_from_favorites'),
     path('api/subscribed-emails/', subscribed_emails, name='subscribed_emails'),
+    path('api/subscribed-users/', get_subscribed_users, name='subscribed_users'),
 ]
